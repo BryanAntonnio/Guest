@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\GaleriController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -29,9 +30,18 @@ Route::get('/', function () {
     return redirect()->route('event.index');
 });
 
-Route::resource('event', EventController::class);
-Route::resource('user', UserController::class);
 
+
+Route::resource('student', StudentController::class);
+Route::resource('galeri', GaleriController::class);
+
+Route::group(['middleware' => 'admin'], function(){
+    Route::resource('event', EventController::class);
+    Route::resource('user', UserController::class);
+};
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 //Route::get('/', [StudentController::class, 'index'])->name('index');
 //Route::get('student/{student}', [StudentController::class, 'edit'])->name('student.edit');
 //Route::patch('update/{student}', [StudentController::class, 'update'])->name('student.update');
@@ -39,9 +49,3 @@ Route::resource('user', UserController::class);
 //
 //Route::view('addStudent', 'student.addStudent')->name('student.create');
 //Route::post('create', [StudentController::class, 'store'])->name('student.store');
-
-Route::resource('student', StudentController::class);
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
